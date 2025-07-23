@@ -1,9 +1,14 @@
+// src/App.jsx
 import React from 'react'
+import { useRoutes } from 'react-router-dom'
+import RoutesValue from './Routes'
 
-function App() {
+export default function App() {
+  const element = useRoutes(RoutesValue)
+
   return (
-    <div>App</div>
+    <main>
+      {element}
+    </main>
   )
 }
-
-export default App
