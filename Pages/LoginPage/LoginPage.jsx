@@ -146,7 +146,7 @@ function LoginPage() {
                         value={captchaValue}
                         onChange={e => setCaptchaValue(e.target.value)}
                         placeholder="کد را وارد کنید"
-                        className=" flex-1 p-2 focus:outline-none"
+                        className=" flex-1 w-full p-2 focus:outline-none"
                         dir="rtl"
                       />
                     </div>
