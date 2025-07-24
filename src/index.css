@@ -20,6 +20,7 @@
 
 @theme {
   --color-imageBg: #d7bd80;
+  --color-Brown: #2C1912;
 }
 
 @layer components {
