@@ -20,6 +20,7 @@
 
 @theme {
   --color-imageBg: #d7bd80;
+  --color-badgeBg: #EFE1C2;
   --color-Brown: #2C1912;
 }
 
@@ -31,7 +32,6 @@
 
 * {
   font-family: Vazir;
-  font-weight: normal;
 }
 
 body {
