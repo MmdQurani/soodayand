@@ -1,8 +1,10 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 
 function Home() {
   return (
-    <div>Home</div>
+    <div className="bg-red-500 mx-auto w-[98%] 2xl:container 2xl:mx-auto">
+      Home
+    </div>
   )
 }
 

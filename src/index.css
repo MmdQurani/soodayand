@@ -1,5 +1,28 @@
 @import "tailwindcss";
 
+@font-face {
+  font-family: Vazir;
+  src: url('../public/fonts/Vazir-Bold.ttf');
+  font-weight: 700;
+}
+
+@font-face {
+  font-family: Vazir;
+  src: url('../public/fonts/Vazir-Medium.ttf');
+  font-weight: 500;
+}
+
+@font-face {
+  font-family: Vazir;
+  src: url('../public/fonts/Vazir-Thin.ttf');
+  font-weight: 200;
+}
+
+* {
+  font-family: Vazir;
+  font-weight: normal;
+}
+
 @theme {
   --color-imageBg: #d7bd80;
 }
@@ -8,6 +31,7 @@
   box-shadow: 0 6px 10px var(--color-gray-300);
   transition: 100ms;
 }
-.shadow_login_btn:hover{
+
+.shadow_login_btn:hover {
   box-shadow: 0 6px 7px var(--color-gray-400);
 }
