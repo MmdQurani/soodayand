@@ -46,3 +46,13 @@ body {
 .shadow_login_btn:hover {
   box-shadow: 0 6px 7px var(--color-gray-400);
 }
+
+.my-gradient-button {
+  background: linear-gradient(88.04deg, #e2c179 3.22%, #a3822f 97.22%) !important;
+
+  border: none;
+}
+
+.my-gradient-button:hover {
+  background: linear-gradient(88.04deg, #ffe09e 3.22%, #c09c41 97.22%) !important
+}
