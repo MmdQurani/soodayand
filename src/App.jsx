@@ -7,7 +7,7 @@ export default function App() {
   const element = useRoutes(RoutesValue)
 
   return (
-    <main>
+    <main className='py-4'>
       {element}
     </main>
   )

@@ -18,13 +18,23 @@
   font-weight: 200;
 }
 
+@theme {
+  --color-imageBg: #d7bd80;
+}
+
+@layer components {
+  .card_style {
+    @apply border-1 border-gray-300 rounded-xl bg-white;
+  }
+}
+
 * {
   font-family: Vazir;
   font-weight: normal;
 }
 
-@theme {
-  --color-imageBg: #d7bd80;
+body {
+  background-color: var(--color-gray-100);
 }
 
 .shadow_login_btn {

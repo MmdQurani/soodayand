@@ -3,11 +3,14 @@ import React from 'react';
 import { Navigate } from 'react-router-dom';
 
 function ProtectedRoute({ children }) {
+  // بررسی توکن در لوکال استوریج
   const token = localStorage.getItem('Token');
+
   if (!token) {
     // کاربر لاگین نکرده
     return <Navigate to="/auth" replace />;
   }
+
   // لاگین کرده، اجازه‌ی دسترسی میدیم
   return children;
 }
