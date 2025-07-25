@@ -4,7 +4,7 @@ import Header from '../../Components/Header/Header'
 import { IoIosArrowBack } from 'react-icons/io'
 import { LuWalletCards } from 'react-icons/lu'
 import { PiCurrencyCircleDollar } from 'react-icons/pi'
-import { Link } from 'react-router-dom'
+import { href, Link } from 'react-router-dom'
 
 import DoughnutChart from '../../Components/DoughnutChart/DoughnutChart'
 import Lable_User_Wealth from '../../Components/Lable_User_Wealth/Lable_User_Wealth'
@@ -18,6 +18,7 @@ import {
 import Banner1 from '../../src/assets/Banner/Banner1.webp'
 import Banner2 from '../../src/assets/Banner/Banner2.webp'
 import Advertising_Banner_Item from '../../Components/Advertising_Banner_Item/Advertising_Banner_Item'
+import Fund_Card from '../../Components/Fund_Card/Fund_Card'
 
 export default function Home() {
 
@@ -135,6 +136,12 @@ export default function Home() {
     }
   }, [totalFunds, financialRemain])
 
+  const fundsList = [
+    { id: 1, href: '/', lable: 'گسترش فردای ایرانیان', fundType: 'صدور و ابطالی', src: '../../public/images/Funds/Gostaresh-D896qJD1.png' },
+    { id: 2, href: '/', lable: 'گنجینه آینده روشن', fundType: '(نماد صایند) ETF', src: '../../public/images/Funds/Ayandeh-BKayWPzA.png' },
+    { id: 3, href: '/', lable: 'تجربه ایرانیان', fundType: 'صدور و ابطالی', src: '../../public/images/Funds/Tajrobe-DnZCvd33.png' },
+  ]
+
   return (
     <div className="Home w-auto min-h-screen flex-1">
       <Header />
@@ -226,6 +233,35 @@ export default function Home() {
           <div className='md:col-span-6 col-span-12'>
             <Advertising_Banner_Item href={'/'} src={Banner2} />
           </div>
+        </div>
+
+        {/* نمایش کارت صندوق های موجود در داشبورد */}
+        <div className='Box_Funds w-full h-auto grid grid-cols-12 mt-4 gap-x-2'>
+
+          {fundsList.map(item =>
+            <div key={item.id} className='2xl:col-span-3 md:col-span-6 col-span-12 py-2 px-1'>
+              <Fund_Card to={item.href} src={item.src} label={item.lable} fundType={item.fundType} />
+            </div>
+          )}
+
+          <div className='2xl:col-span-3 md:col-span-6 col-span-12 py-2 px-1'>
+            <Link to={'/'} className='Fund_Card card_style w-full min-h-46 max-h-max p-3 flex flex-col items-center justify-around'>
+              <div className='head_Fund_Card w-full flex flex-row justify-between items-center'>
+                <div className='flex-1 flex flex-col gap-y-2'>
+                  <span className='font-bold text-md text-gray-800'>کوآنتوم</span>
+                  <span className='text-xs bg-imageBg/60 text-gray-800 w-max px-4 py-1 rounded-md'>باشگاه مشتریان</span>
+                </div>
+                <div className='w-24 flex justify-center items-center'>
+                  <img className='w-full object-contain' src={'../../public/images/Funds/Clob-DmiE0y0H.png'} alt="صندوق ها" />
+                </div>
+              </div>
+
+              <div className='body_Fund_Card w-full h-auto flex justify-between items-center pl-2'>
+                <span className='text-sm text-gray-600'>بسته های پیشنهادی برای شما</span>
+              </div>
+            </Link>
+          </div>
+
         </div>
 
       </div>

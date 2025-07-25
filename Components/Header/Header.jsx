@@ -21,13 +21,13 @@ function Header() {
       <div className="w-full h-full lg:flex hidden">
         <div className="w-full h-full grid grid-cols-12 gap-x-3 text-gray-500">
           {/* نام صفحه */}
-          <div className="xl:col-span-5 col-span-3 bg-white hover:text-gray-800 hover:shadow-md transition-all duration-100 rounded-md flex items-center px-4">
+          <div className="xl:col-span-5 col-span-3 card_style bg-white hover:text-gray-800 hover:shadow-md transition-all duration-100 rounded-md flex items-center px-4">
             <SlHome className="inline-block text-xl" />
             <span className="text-md font-bold mr-2">داشبورد</span>
           </div>
 
           {/* نام کاربر */}
-          <div className="col-span-3 bg-white hover:text-gray-800 hover:shadow-md transition-all duration-100 rounded-md flex items-center px-4">
+          <div className="col-span-3 card_style bg-white hover:text-gray-800 hover:shadow-md transition-all duration-100 rounded-md flex items-center px-4">
             <HiOutlineUserCircle className="inline-block text-xl" />
             {loading ? (
               <span className="text-sm mr-1">در حال بارگذاری...</span>
@@ -41,7 +41,7 @@ function Header() {
           </div>
 
           {/* تاریخ شمسی */}
-          <div className="xl:col-span-3 col-span-4 cursor-pointer bg-white hover:text-gray-800 hover:shadow-md transition-all duration-100 rounded-md flex items-center justify-between px-4">
+          <div className="xl:col-span-3 col-span-4 cursor-pointer card_style bg-white hover:text-gray-800 hover:shadow-md transition-all duration-100 rounded-md flex items-center justify-between px-4">
             <div>
               <HiOutlineUserCircle className="inline-block text-xl" />
               <span className="text-sm font-bold mr-1">تاریخ روز :</span>
@@ -51,10 +51,10 @@ function Header() {
 
           {/* اعلان و خروج */}
           <div className="xl:col-span-1 col-span-2 h-full flex flex-row justify-around items-center gap-x-2">
-            <button className="cursor-pointer bg-white hover:text-gray-800 hover:shadow-md transition-all duration-100 rounded-md flex items-center justify-center w-full h-full">
+            <button className="cursor-pointer card_style bg-white hover:text-gray-800 hover:shadow-md transition-all duration-100 rounded-md flex items-center justify-center w-full h-full">
               <IoMdNotificationsOutline className="inline-block text-2xl text-gray-500" />
             </button>
-            <button className="cursor-pointer bg-white hover:text-gray-800 hover:shadow-md transition-all duration-100 rounded-md flex items-center justify-center w-full h-full">
+            <button className="cursor-pointer card_style bg-white hover:text-gray-800 hover:shadow-md transition-all duration-100 rounded-md flex items-center justify-center w-full h-full">
               <HiArrowLeftStartOnRectangle className="inline-block text-2xl text-gray-500" />
             </button>
           </div>
