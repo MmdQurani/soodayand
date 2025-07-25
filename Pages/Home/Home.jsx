@@ -15,6 +15,10 @@ import {
   fetchGostareshfundhttps,
 } from '../../src/APIs/api/assetService'
 
+import Banner1 from '../../src/assets/Banner/Banner1.webp'
+import Banner2 from '../../src/assets/Banner/Banner2.webp'
+import Advertising_Banner_Item from '../../Components/Advertising_Banner_Item/Advertising_Banner_Item'
+
 export default function Home() {
 
   // ۱. تعریف state برای ذخیره‌ی پاسخ API
@@ -136,6 +140,8 @@ export default function Home() {
       <Header />
 
       <div className="Main_content w-full min-h-screen mt-4">
+
+        {/* کارت نمایش دارایی کاربر در صندوق ها */}
         <div className="user_wealth card_style px-4 pt-4 pb-8">
 
           {/* عنوان بخش دارایی */}
@@ -211,6 +217,17 @@ export default function Home() {
             </>
           )}
         </div>
+
+        {/* بخش نمایش بنر های تبلیغاتی */}
+        <div className='advertising_banner w-full h-auto grid grid-cols-12 gap-y-4 mt-4'>
+          <div className='md:col-span-6 col-span-12'>
+            <Advertising_Banner_Item href={'/'} src={Banner1} />
+          </div>
+          <div className='md:col-span-6 col-span-12'>
+            <Advertising_Banner_Item href={'/'} src={Banner2} />
+          </div>
+        </div>
+
       </div>
     </div>
   )
