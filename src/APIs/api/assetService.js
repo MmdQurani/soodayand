@@ -27,3 +27,9 @@ export const fetchGostareshfundhttps = async () => {
   const response = await api.get(`/Asset/CustomerRemains?fundCode=10915&endDate=${endDate}`)
   return response.data
 }
+
+export const fetchCustomerInfo = async () => {
+
+  const response = await api.get(`/UserManagement/CustomerInfo?fundCode=10915`)
+  return response.data
+}

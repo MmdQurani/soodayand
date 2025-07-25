@@ -8,7 +8,12 @@ import { Link } from 'react-router-dom'
 
 import DoughnutChart from '../../Components/DoughnutChart/DoughnutChart'
 import Lable_User_Wealth from '../../Components/Lable_User_Wealth/Lable_User_Wealth'
-import { fetchPurchaseUpperBound, fetchAssetService, fetchTajrobeiranian, fetchGostareshfundhttps } from '../../src/APIs/api/assetService'
+import {
+  fetchPurchaseUpperBound,
+  fetchAssetService,
+  fetchTajrobeiranian,
+  fetchGostareshfundhttps,
+} from '../../src/APIs/api/assetService'
 
 export default function Home() {
 
@@ -29,9 +34,25 @@ export default function Home() {
   const [purchaseUpperBound, setPurchaseUpperBound] = useState(0) // وضعیت سقف خرید
 
 
-  const values = [1000, 400, 700]
-  const labels = ['گسترش فردای ایرانیان', 'گنجینه آینده روشن', 'تجربه ایرانیان']
+  const values = [assetServiceData, tajrobeiranianData, gostareshFundData]
+  const labels = ['گسترش فردای ایرانیان', 'تجربه ایرانیان', 'گنجینه آینده روشن']
   const colors = ['#b91c1c', '#059669', '#2563eb']
+
+
+  // محاسبه درصد هر آیتم نسبت به totalFunds
+  // اگر totalFunds صفر باشد، درصدها را به صورت پیش‌فرض تنظیم می‌کنیم
+  // در غیر این صورت، درصدها را بر اساس مقادیر محاسبه می‌کنیم
+  const percentages =
+    totalFunds > 0
+      ? values.map(v =>
+        (v / totalFunds * 100).toLocaleString('fa-IR', {
+          minimumFractionDigits: 2, // تنظیم حداقل رقم اعشار
+          maximumFractionDigits: 2 // تنظیم حداکثر رقم اعشار
+        })
+      )
+      : ['۰٫۰۰', '۰٫۰۰', '۰٫۰۰'] // درصدها را به صورت پیش‌فرض صفر تنظیم می‌کنیم
+
+
 
   useEffect(() => {
 
@@ -73,9 +94,6 @@ export default function Home() {
 
         // ذخیره‌ی داده‌ها در state
         setUpperBound(upperBoundData)
-        setTajrobeiranianData(tajrobeiranian)
-        setGostareshFundData(gostareshFund)
-
       } catch (err) {
         setError(err)
       } finally {
@@ -90,8 +108,8 @@ export default function Home() {
   useEffect(() => {
     // اگر داده‌ی upperBound وجود داشته باشد، مقادیر مالی را تنظیم می‌کنیم
     if (upperBound) {
-      setFinancialRemain(upperBound.financialRemain)
-      setPurchaseUpperBound(upperBound.purchaseUpperBound)
+      setFinancialRemain(0)
+      setPurchaseUpperBound(0)
     }
   }, [upperBound])
 
@@ -108,7 +126,7 @@ export default function Home() {
     if (financialRemain === null || purchaseUpperBound === null) {
       setTotalPrice(0)
     } else {
-      const total = Number(financialRemain) + Number(purchaseUpperBound);
+      const total = Number(financialRemain) + Number(totalFunds);
       setTotalPrice(total)
     }
   }, [totalFunds, financialRemain])
@@ -172,19 +190,22 @@ export default function Home() {
                   </div>
 
                   <div className="flex flex-col justify-center items-start gap-y-8 text-sm text-gray-700">
-                    <div className="flex items-center gap-x-2">
-                      <span className="w-4 h-4 rounded-full" style={{ backgroundColor: colors[0] }} />
-                      <span>گسترش فردای ایرانیان – ۴۴.۶۷٪</span>
-                    </div>
-                    <div className="flex items-center gap-x-2">
-                      <span className="w-4 h-4 rounded-full" style={{ backgroundColor: colors[1] }} />
-                      <span>گنجینه آینده‌ی روشن – ۱۲.۹۳٪</span>
-                    </div>
-                    <div className="flex items-center gap-x-2">
-                      <span className="w-4 h-4 rounded-full" style={{ backgroundColor: colors[2] }} />
-                      <span>تجربه ایرانیان – ۴۲.۴۰٪</span>
-                    </div>
+
+                    {/* درصد هر آیتم نسبت به totalFunds */}
+                    {values.map((_, idx) => (
+                      <div key={idx} className="flex items-center gap-x-2">
+                        <span
+                          className="w-4 h-4 rounded-full"
+                          style={{ backgroundColor: colors[idx] }}
+                        />
+                        <span>
+                          {labels[idx]} – {percentages[idx]}٪
+                        </span>
+                      </div>
+                    ))}
+
                   </div>
+
                 </div>
               </div>
             </>
