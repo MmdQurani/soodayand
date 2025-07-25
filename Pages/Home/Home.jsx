@@ -1,5 +1,5 @@
 // src/Pages/Home/Home.jsx
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Header from '../../Components/Header/Header'
 import { IoIosArrowBack } from 'react-icons/io'
 import { LuWalletCards } from 'react-icons/lu'
@@ -8,20 +8,119 @@ import { Link } from 'react-router-dom'
 
 import DoughnutChart from '../../Components/DoughnutChart/DoughnutChart'
 import Lable_User_Wealth from '../../Components/Lable_User_Wealth/Lable_User_Wealth'
+import { fetchPurchaseUpperBound, fetchAssetService, fetchTajrobeiranian, fetchGostareshfundhttps } from '../../src/APIs/api/assetService'
 
 export default function Home() {
+
+  // ۱. تعریف state برای ذخیره‌ی پاسخ API
+  const [upperBound, setUpperBound] = useState(null) // ذخیره‌ی داده‌ی دریافتی از API
+  const [assetServiceData, setAssetServiceData] = useState(0) // ذخیره‌ی داده‌ی دارایی
+  const [tajrobeiranianData, setTajrobeiranianData] = useState(0) // ذخیره‌ی داده‌ی تجربه ایرانیان
+  const [gostareshFundData, setGostareshFundData] = useState(0) // ذخیره‌ی داده‌ی گسترش فردای ایرانیان
+
+  const [loading, setLoading] = useState(true) // وضعیت لود شدن
+  const [error, setError] = useState(null) // وضعیت خطا
+
+
+  const [totalFunds, setTotalFunds] = useState(0) // وضعیت دارایی صندوق ها
+  const [totalPrice, setTotalPrice] = useState(0) // وضعیت قیمت کل
+
+  const [financialRemain, setFinancialRemain] = useState(0) // وضعیت مانده مالی
+  const [purchaseUpperBound, setPurchaseUpperBound] = useState(0) // وضعیت سقف خرید
+
+
   const values = [1000, 400, 700]
   const labels = ['گسترش فردای ایرانیان', 'گنجینه آینده روشن', 'تجربه ایرانیان']
   const colors = ['#b91c1c', '#059669', '#2563eb']
+
+  useEffect(() => {
+
+    // ۲. تابعی برای بارگذاری داده‌ها از API
+    const loadUpperBound = async () => {
+      setLoading(true)
+      setError(null)
+
+      // ۴. فراخوانی API و مدیریت پاسخ
+      try {
+        const upperBoundData = await fetchPurchaseUpperBound()
+        const assetService = await fetchAssetService()
+        const tajrobeiranian = await fetchTajrobeiranian()
+        const gostareshFund = await fetchGostareshfundhttps()
+
+        // مجموع دارایی‌ها را محاسبه می‌کنیم
+        if (assetService.result && assetService.result.length > 0) {
+          const sumEtf = assetService.result.reduce((acc, item) => acc + item.sum, 0) // فرض بر این است که هر آیتم دارای یک فیلد sum است
+          setAssetServiceData(sumEtf) // ذخیره‌ی مجموع دارایی‌ها در state
+        } else {
+          setAssetServiceData(0)
+        }
+
+        // اگر tajrobeiranian.asset وجود داشته باشد، آن را به عنوان مجموع دارایی تجربه ایرانیان تنظیم می‌کنیم
+        if (tajrobeiranian.asset) {
+          const sumTajrobeiranian = tajrobeiranian.asset // فرض بر این است که tajrobeiranian.asset یک عدد است
+          setTajrobeiranianData(sumTajrobeiranian)
+        } else {
+          setTajrobeiranianData(0)
+        }
+
+        // اگر gostareshFund.asset وجود داشته باشد، آن را به عنوان مجموع دارایی گسترش فردای ایرانیان تنظیم می‌کنیم
+        if (gostareshFund.asset) {
+          const sumGostareshFund = gostareshFund.asset // فرض بر این است که gostareshFund.asset یک عدد است
+          setGostareshFundData(sumGostareshFund)
+        } else {
+          setGostareshFundData(0)
+        }
+
+        // ذخیره‌ی داده‌ها در state
+        setUpperBound(upperBoundData)
+        setTajrobeiranianData(tajrobeiranian)
+        setGostareshFundData(gostareshFund)
+
+      } catch (err) {
+        setError(err)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    loadUpperBound()
+  }, [])
+
+  // ۳. استفاده از useEffect برای بارگذاری داده‌ها هنگام بارگذاری کامپوننت
+  useEffect(() => {
+    // اگر داده‌ی upperBound وجود داشته باشد، مقادیر مالی را تنظیم می‌کنیم
+    if (upperBound) {
+      setFinancialRemain(upperBound.financialRemain)
+      setPurchaseUpperBound(upperBound.purchaseUpperBound)
+    }
+  }, [upperBound])
+
+  // ۴. محاسبه‌ی دارایی کل بر اساس داده‌های دارایی
+  useEffect(() => {
+    const total = assetServiceData + tajrobeiranianData + gostareshFundData // محاسبه‌ی مجموع دارایی‌ها
+    setTotalFunds(total)
+  }, [assetServiceData, tajrobeiranianData, gostareshFundData])
+
+
+  // ۵. محاسبه‌ی قیمت کل بر اساس مانده مالی و سقف خرید
+  useEffect(() => {
+    // اگر مانده مالی یا سقف خرید وجود نداشته باشد، قیمت کل را صفر تنظیم می‌کنیم
+    if (financialRemain === null || purchaseUpperBound === null) {
+      setTotalPrice(0)
+    } else {
+      const total = Number(financialRemain) + Number(purchaseUpperBound);
+      setTotalPrice(total)
+    }
+  }, [totalFunds, financialRemain])
 
   return (
     <div className="Home w-auto min-h-screen flex-1">
       <Header />
 
       <div className="Main_content w-full min-h-screen mt-4">
-        <div className="user_wealth card_style p-4">
+        <div className="user_wealth card_style px-4 pt-4 pb-8">
 
-          {/* تایتل بخش دارایی */}
+          {/* عنوان بخش دارایی */}
           <div className="title_box_user_wealth text-gray-700 py-2 pb-6 flex justify-between items-center border-b-2 border-dashed border-gray-300">
             <div className="lable_user_wealth">
               <LuWalletCards className="inline-block text-2xl" />
@@ -34,61 +133,62 @@ export default function Home() {
             </button>
           </div>
 
-          {/* نمایش دارایی کاربر بصورت نموداری و متنی */}
-          <div className="grid grid-cols-12 mt-4 gap-y-12">
+          {/* وضعیت لود شدن یا خطا */}
+          {loading && <p className="text-center py-4">در حال بارگذاری...</p>}
+          {error && <p className="text-center text-red-600 py-4">خطا در دریافت اطلاعات</p>}
 
-            {/* نمایش دارایی کاربر بصورت متنی */}
-            <div className="md:col-span-6 col-span-12 md:order-1 order-2 px-3 space-y-2">
-              <Lable_User_Wealth wealthText="دارایی کل" wealthAmount="1,000,000" first />
-              <Lable_User_Wealth wealthText="دارایی در صندوق‌ها" wealthAmount="500,000" />
-              <Lable_User_Wealth wealthText="مانده کیف پول کارگزاری" wealthAmount="250,000" />
-              <Lable_User_Wealth wealthText="مانده قابل برداشت" wealthAmount="250,000" />
+          {!loading && !error && upperBound && (
+            <>
+              <div className="grid grid-cols-12 mt-4 gap-y-12">
+                {/* بخش متنی برجسته */}
+                <div className="md:col-span-6 col-span-12 md:order-1 order-2 px-3 space-y-2">
+                  <Lable_User_Wealth wealthText="دارایی کل" wealthAmount={totalPrice} first />
+                  <Lable_User_Wealth wealthText="دارایی در صندوق‌ها" wealthAmount={totalFunds} />
+                  <Lable_User_Wealth wealthText="مانده کیف پول کارگزاری" wealthAmount={financialRemain} />
+                  <Lable_User_Wealth wealthText="مانده قابل برداشت" wealthAmount={purchaseUpperBound} />
 
-              {/* دکمه های سرمایه گذاری و برداشت */}
-              <div className="grid grid-cols-6 gap-x-4 mt-4">
-
-                <Link to="/" className="col-span-3 my-gradient-button transi font-bold w-full py-2 rounded-md flex justify-center items-center gap-x-2">
-
-                  <PiCurrencyCircleDollar className="text-xl" />
-                  <span className="text-white">سرمایه‌گذاری</span>
-                </Link>
-
-                <button className="col-span-3 border border-gray-800 text-gray-800 w-full py-2 rounded-md flex justify-center items-center gap-x-2">
-                  <PiCurrencyCircleDollar className="text-xl" />
-                  <span>برداشت وجه</span>
-                </button>
-              </div>
-            </div>
-
-            {/* نمایش دارایی کاربر در صندوق ها بصورت نموداری */}
-            <div className="md:col-span-6 col-span-12 md:order-2 order-1 flex flex-row items-center justify-around gap-x-6 md:mt-0 mt-4">
-              <div className="size-36">
-                <DoughnutChart
-                  values={values}
-                  labels={labels}
-                  colors={colors}
-                  cutout="90%"
-                  showLegend={false}
-                />
-              </div>
-
-              <div className="flex flex-col justify-center items-start gap-y-8 text-sm text-gray-700">
-                <div className="flex items-center gap-x-2">
-                  <span className="w-4 h-4 rounded-full" style={{ backgroundColor: colors[0] }}></span>
-                  <span>گسترش فردای ایرانیان – ۴۴.۶۷٪</span>
+                  <div className="grid grid-cols-6 gap-x-4 mt-4">
+                    <Link to="/" className="col-span-3 my-gradient-button font-bold w-full py-2 rounded-md flex justify-center items-center gap-x-2">
+                      <PiCurrencyCircleDollar className="text-xl" />
+                      <span className="text-white">سرمایه‌گذاری</span>
+                    </Link>
+                    <button className="col-span-3 border border-gray-800 text-gray-800 w-full py-2 rounded-md flex justify-center items-center gap-x-2">
+                      <PiCurrencyCircleDollar className="text-xl" />
+                      <span>برداشت وجه</span>
+                    </button>
+                  </div>
                 </div>
-                <div className="flex items-center gap-x-2">
-                  <span className="w-4 h-4 rounded-full" style={{ backgroundColor: colors[1] }}></span>
-                  <span>گنجینه آینده‌ی روشن – ۱۲.۹۳٪</span>
-                </div>
-                <div className="flex items-center gap-x-2">
-                  <span className="w-4 h-4 rounded-full" style={{ backgroundColor: colors[2] }}></span>
-                  <span>تجربه ایرانیان – ۴۲.۴۰٪</span>
+
+                {/* نمودار دایره‌ای */}
+                <div className="md:col-span-6 col-span-12 md:order-2 order-1 flex flex-row items-center justify-around gap-x-6 md:mt-0 mt-4">
+                  <div className="size-36">
+                    <DoughnutChart
+                      values={values}
+                      labels={labels}
+                      colors={colors}
+                      cutout="90%"
+                      showLegend={false}
+                    />
+                  </div>
+
+                  <div className="flex flex-col justify-center items-start gap-y-8 text-sm text-gray-700">
+                    <div className="flex items-center gap-x-2">
+                      <span className="w-4 h-4 rounded-full" style={{ backgroundColor: colors[0] }} />
+                      <span>گسترش فردای ایرانیان – ۴۴.۶۷٪</span>
+                    </div>
+                    <div className="flex items-center gap-x-2">
+                      <span className="w-4 h-4 rounded-full" style={{ backgroundColor: colors[1] }} />
+                      <span>گنجینه آینده‌ی روشن – ۱۲.۹۳٪</span>
+                    </div>
+                    <div className="flex items-center gap-x-2">
+                      <span className="w-4 h-4 rounded-full" style={{ backgroundColor: colors[2] }} />
+                      <span>تجربه ایرانیان – ۴۲.۴۰٪</span>
+                    </div>
+                  </div>
                 </div>
               </div>
-
-            </div>
-          </div>
+            </>
+          )}
         </div>
       </div>
     </div>

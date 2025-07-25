@@ -32,4 +32,26 @@ const Date_Day = () => {
   )
 }
 
+
+/**
+ * برمی‌گرداند: رشته‌ی تاریخ شمسی به فرمت YYYY/MM/DD
+ */
+export const getJalaliDate = () => {
+  const now = new Date()
+  const { jy, jm, jd } = toJalaali(
+    now.getFullYear(),
+    now.getMonth() + 1,
+    now.getDate()
+  )
+
+  const pad = (n) => n.toString().padStart(2, '0')
+  return `${jy}/${pad(jm)}/${pad(jd)}`
+}
+
+
+export const Date_Day_Value = () => {
+  // مستقیماً تابع را صدا می‌زنیم و مقدار رشته را بازمی‌گردانیم
+  return getJalaliDate()
+}
+
 export default Date_Day
