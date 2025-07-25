@@ -4,6 +4,11 @@ import Header from '../../Components/Header/Header'
 import { IoIosArrowBack } from 'react-icons/io'
 import { LuWalletCards } from 'react-icons/lu'
 import { PiCurrencyCircleDollar } from 'react-icons/pi'
+import { FiPhoneCall } from "react-icons/fi";
+import { BiPlanet } from "react-icons/bi";
+import { FaInstagram } from "react-icons/fa";
+import { LiaTelegramPlane } from "react-icons/lia";
+
 import { href, Link } from 'react-router-dom'
 
 import DoughnutChart from '../../Components/DoughnutChart/DoughnutChart'
@@ -238,12 +243,14 @@ export default function Home() {
         {/* نمایش کارت صندوق های موجود در داشبورد */}
         <div className='Box_Funds w-full h-auto grid grid-cols-12 mt-4 gap-x-2'>
 
+          {/* کارت مربوط به صندوق ها */}
           {fundsList.map(item =>
             <div key={item.id} className='2xl:col-span-3 md:col-span-6 col-span-12 py-2 px-1'>
               <Fund_Card to={item.href} src={item.src} label={item.lable} fundType={item.fundType} />
             </div>
           )}
 
+          {/* کارت باشگاه مشتریان */}
           <div className='2xl:col-span-3 md:col-span-6 col-span-12 py-2 px-1'>
             <Link to={'/'} className='Fund_Card card_style w-full min-h-46 max-h-max p-3 flex flex-col items-center justify-around'>
               <div className='head_Fund_Card w-full flex flex-row justify-between items-center'>
@@ -262,6 +269,37 @@ export default function Home() {
             </Link>
           </div>
 
+        </div>
+
+        {/* لینک های ارتباطی */}
+        <div className='w-full h-auto lg:flex hidden justify-end'>
+          <div className='xl:w-4/5 w-full h-10 grid grid-cols-12 gap-x-8 pl-2 text-sm' dir='ltr'>
+            <Link to={'/'} className='col-span-2 cursor-pointer text-gray-900 hover:text-imageBg bg-white  rounded-lg hover:shadow-md flex justify-center items-center'>
+              <span className='flex flex-row items-center gap-x-2'>
+                تلگرام
+                <LiaTelegramPlane className='text-lg' />
+              </span>
+            </Link>
+            <Link to={'/'} className='col-span-2 cursor-pointer text-gray-900 hover:text-imageBg bg-white  rounded-lg hover:shadow-md flex justify-center items-center'>
+              <span className='flex flex-row items-center gap-x-2'>
+                اینستاگرام
+                <FaInstagram className='text-lg' />
+              </span>
+            </Link>
+            <Link to={'/'} className='col-span-3 cursor-pointer text-gray-900 hover:text-imageBg bg-white  rounded-lg hover:shadow-md flex justify-center items-center'>
+              <span className='flex flex-row items-center gap-x-2'>
+                سـایت کارگزاری
+                <BiPlanet className='text-lg' />
+              </span>
+            </Link>
+            <Link to={'/'} className='col-span-5 cursor-pointer text-gray-900 hover:text-imageBg bg-white rounded-lg hover:shadow-md flex flex-row justify-between items-center px-2' dir='rtl'>
+              <span className='flex flex-row items-center gap-x-2'>
+                <FiPhoneCall className='text-md' />
+                تماس با ما
+              </span>
+              <span >۰۲۱-۴۲۷۶۴۰۰۰</span>
+            </Link>
+          </div>
         </div>
 
       </div>
