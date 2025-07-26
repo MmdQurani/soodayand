@@ -44,8 +44,8 @@ export default function Home() {
   const [purchaseUpperBound, setPurchaseUpperBound] = useState(0) // وضعیت سقف خرید
 
 
-  const values = [assetServiceData, tajrobeiranianData, gostareshFundData]
-  const labels = ['گسترش فردای ایرانیان', 'تجربه ایرانیان', 'گنجینه آینده روشن']
+  const values = [gostareshFundData, assetServiceData, tajrobeiranianData]
+  const labels = ['گسترش فردای ایرانیان', 'گنجینه آینده روشن', 'تجربه ایرانیان']
   const colors = ['#b91c1c', '#059669', '#2563eb']
 
 
@@ -78,6 +78,12 @@ export default function Home() {
         const tajrobeiranian = await fetchTajrobeiranian()
         const gostareshFund = await fetchGostareshfundhttps()
 
+
+        // console.log(upperBoundData)
+        console.log(assetService)
+        console.log(tajrobeiranian)
+        console.log(gostareshFund)
+
         // مجموع دارایی‌ها را محاسبه می‌کنیم
         if (assetService.result && assetService.result.length > 0) {
           const sumEtf = assetService.result.reduce((acc, item) => acc + item.sum, 0) // فرض بر این است که هر آیتم دارای یک فیلد sum است
@@ -87,16 +93,16 @@ export default function Home() {
         }
 
         // اگر tajrobeiranian.asset وجود داشته باشد، آن را به عنوان مجموع دارایی تجربه ایرانیان تنظیم می‌کنیم
-        if (tajrobeiranian.asset) {
-          const sumTajrobeiranian = tajrobeiranian.asset // فرض بر این است که tajrobeiranian.asset یک عدد است
+        if (tajrobeiranian && tajrobeiranian.length > 0) {
+          const sumTajrobeiranian = tajrobeiranian.map(item => item.asset) // فرض بر این است که tajrobeiranian.asset یک عدد است
           setTajrobeiranianData(sumTajrobeiranian)
         } else {
           setTajrobeiranianData(0)
         }
 
         // اگر gostareshFund.asset وجود داشته باشد، آن را به عنوان مجموع دارایی گسترش فردای ایرانیان تنظیم می‌کنیم
-        if (gostareshFund.asset) {
-          const sumGostareshFund = gostareshFund.asset // فرض بر این است که gostareshFund.asset یک عدد است
+        if (gostareshFund && gostareshFund.length > 0) {
+          const sumGostareshFund = gostareshFund.map(item => item.asset) // فرض بر این است که gostareshFund.asset یک عدد است
           setGostareshFundData(sumGostareshFund)
         } else {
           setGostareshFundData(0)
@@ -118,14 +124,15 @@ export default function Home() {
   useEffect(() => {
     // اگر داده‌ی upperBound وجود داشته باشد، مقادیر مالی را تنظیم می‌کنیم
     if (upperBound) {
-      setFinancialRemain(0)
-      setPurchaseUpperBound(0)
+      setFinancialRemain(upperBound.financialRemain)
+      setPurchaseUpperBound(upperBound.purchaseUpperBound)
     }
   }, [upperBound])
 
   // ۴. محاسبه‌ی دارایی کل بر اساس داده‌های دارایی
   useEffect(() => {
-    const total = assetServiceData + tajrobeiranianData + gostareshFundData // محاسبه‌ی مجموع دارایی‌ها
+    const total = Number(assetServiceData) + Number(tajrobeiranianData) + Number(gostareshFundData) // محاسبه‌ی مجموع دارایی‌ها
+    console.log(Number(assetServiceData), Number(tajrobeiranianData), Number(gostareshFundData))
     setTotalFunds(total)
   }, [assetServiceData, tajrobeiranianData, gostareshFundData])
 
@@ -150,7 +157,6 @@ export default function Home() {
   return (
     <div className="Home w-auto min-h-screen flex-1">
       <Header />
-
       <div className="Main_content w-full min-h-screen mt-4">
 
         {/* کارت نمایش دارایی کاربر در صندوق ها */}
